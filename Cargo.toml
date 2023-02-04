@@ -1,0 +1,7 @@
+[package]
+name = "temp-converter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+xlformula_engine = "0.1.17"
