@@ -1,3 +1,6 @@
+// TODO split file into modules
+// TODO Analyze ownership
+
 use std::collections::BTreeMap;
 use std::io;
 extern crate xlformula_engine;
@@ -7,6 +10,8 @@ use xlformula_engine::types::Formula;
 use xlformula_engine::types::Value;
 use xlformula_engine::NoCustomFunction;
 use xlformula_engine::NoReference;
+
+// TODO convert scales_of_temperature into a struct or enum or both
 
 fn scales_of_temperature() -> BTreeMap<String, [(String, String); 4]> {
     let mut scales: BTreeMap<String, [(String, String); 4]> = BTreeMap::new();
@@ -54,7 +59,11 @@ fn get_unit_scale(
     unit_name: String,
     scales_map: fn() -> BTreeMap<String, [(String, String); 4]>,
 ) -> BTreeMap<String, String> {
-    BTreeMap::from(scales_map().get(&unit_name).unwrap().to_owned())
+    if let Some(scale) = scales_map().get(&unit_name) {
+        BTreeMap::from(scale.to_owned())
+    } else {
+        panic!();
+    }
 }
 
 fn get_unit_abbreviation(
@@ -69,7 +78,7 @@ fn get_unit_abbreviation(
     if let Some(abbr) = unit_scale_map(unit_scale_map_unit_name, scales_map).get(&unit_name) {
         abbr.to_string()
     } else {
-        String::from("failure")
+        panic!();
     }
 }
 
@@ -88,7 +97,7 @@ struct TemperatureInformation {
 }
 
 impl TemperatureInformation {
-    fn instantiate_temperature_information(
+    fn new(
         initial_temp_amount: f32,
         initial_unit_of_temperature: String,
         final_unit_of_temperature: String,
@@ -151,7 +160,7 @@ fn display_temperature_units_list(user_prompt: &str) -> String {
             .read_line(&mut unit_selection)
             .expect("Failed to read line");
         let unit_selection: usize = match unit_selection.trim().parse() {
-            // TODO: only allow # from selection
+            // TODO only allow # from selection
             Ok(num) if num <= (temp_units.len() - 1) => num,
             Ok(_) => {
                 println!("Invalid Selection");
@@ -169,7 +178,6 @@ fn display_temperature_units_list(user_prompt: &str) -> String {
 }
 
 fn evaluate_expressions(formula: &str, variable: &f32) -> f32 {
-    // todo finish expression evaluator
     let expression = formula.replace("x", &variable.to_string());
     let formula: Formula =
         parse_formula::parse_string_to_formula(&expression, None::<NoCustomFunction>);
@@ -192,14 +200,12 @@ fn convert_temp(
 ) -> f32 {
     let unit_scale: BTreeMap<String, String> =
         get_unit_scale(initial_unit_of_temperature.to_string(), scales_map);
-    let target_unit_expression: String = unit_scale
-        .get(&target_unit_of_temperature as &str)
-        .unwrap()
-        .to_owned();
-    let final_temp_amount: f32 = evaluate_expressions(&target_unit_expression, initial_temp_amount);
-    final_temp_amount
+    if let Some(scale) = unit_scale.get(&target_unit_of_temperature as &str) {
+        evaluate_expressions(&scale, initial_temp_amount)
+    } else {
+        panic!();
+    }
 }
-
 fn display_temperature_conversion(temp_data: TemperatureInformation) {
     println!(
         "Converted Initial Temperature {0}°{1} to Final Temperature {2}°{3}",
@@ -210,7 +216,7 @@ fn display_temperature_conversion(temp_data: TemperatureInformation) {
     );
 }
 fn main() {
-    display_temperature_conversion(TemperatureInformation::instantiate_temperature_information(
+    display_temperature_conversion(TemperatureInformation::new(
         enter_temperature(),
         display_temperature_units_list("Select Current Unit of Temperature"),
         display_temperature_units_list("Select Target Unit of Temperature"),
