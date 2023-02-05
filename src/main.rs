@@ -47,7 +47,7 @@ fn scales_of_temperature() -> BTreeMap<String, [(String, String); 4]> {
         ],
     );
 
-   scales
+    scales
 }
 
 fn get_unit_scale(
@@ -84,12 +84,11 @@ struct TemperatureInformation {
     initial_unit_of_temperature_abbreviation: String,
     final_temperature_amount: f32,
     _final_unit_of_temperature: String,
-    final_unit_of_temperature_abbreviation: String
-
+    final_unit_of_temperature_abbreviation: String,
 }
 
 impl TemperatureInformation {
-    fn instatiate_temperature_information(
+    fn instantiate_temperature_information(
         initial_temp_amount: f32,
         initial_unit_of_temperature: String,
         final_unit_of_temperature: String,
@@ -103,77 +102,82 @@ impl TemperatureInformation {
                 initial_unit_of_temperature.to_string(),
                 scales_of_temperature,
             ),
-            final_temperature_amount: convert_temp(&initial_temp_amount, &initial_unit_of_temperature, &final_unit_of_temperature, scales_of_temperature),
+            final_temperature_amount: convert_temp(
+                &initial_temp_amount,
+                &initial_unit_of_temperature,
+                &final_unit_of_temperature,
+                scales_of_temperature,
+            ),
             _final_unit_of_temperature: final_unit_of_temperature.to_string(),
             final_unit_of_temperature_abbreviation: get_unit_abbreviation(
                 String::from("abbreviation"),
                 get_unit_scale,
                 final_unit_of_temperature.to_string(),
                 scales_of_temperature,
-            )
+            ),
         }
     }
 }
 
 fn enter_temperature() -> f32 {
-    loop{
-    println!("Enter Temperature");
-    let mut temperature: String = String::new();
-    
-        io::stdin()
-        .read_line(&mut temperature)
-        .expect("Failed to read line");
+    loop {
+        println!("Enter Temperature");
+        let mut temperature: String = String::new();
 
-    let temperature: f32 = match temperature.trim().parse::<f32>() {
-        Ok(num) =>  num,
-        Err(_) => {
-            println!("Invalid Number");
-            continue;
-        },
-    };
-        break temperature
-    }    
+        io::stdin()
+            .read_line(&mut temperature)
+            .expect("Failed to read line");
+
+        let temperature: f32 = match temperature.trim().parse::<f32>() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Invalid Number");
+                continue;
+            }
+        };
+        break temperature;
+    }
 }
 
 fn display_temperature_units_list(user_prompt: &str) -> String {
-    
-    loop{
-    println!("{user_prompt}");
-    let temp_units: Vec<String> = get_scales(scales_of_temperature);
-    for (i, el) in temp_units.iter().enumerate() {
-        println!("{i}: {el}");
-    }
-    let mut unit_selection: String = String::new();
-    io::stdin()
-        .read_line(&mut unit_selection)
-        .expect("Failed to read line");
-    let unit_selection: usize = match unit_selection.trim().parse() {
-        // TODO: only allow # from selection
-        Ok(num) if num <= (temp_units.len() - 1) => num,
-        Ok(_) => {
-            println!("Invalid Selection");
-            continue;
+    loop {
+        println!("{user_prompt}");
+        let temp_units: Vec<String> = get_scales(scales_of_temperature);
+        for (i, el) in temp_units.iter().enumerate() {
+            println!("{i}: {el}");
         }
-        Err(_) => {
-            println!("Invalid Selection");
-            continue;
-        },
-    };
-    let unit_of_temperature: String = get_scales(scales_of_temperature)[unit_selection].to_string();
-    break unit_of_temperature
-}
+        let mut unit_selection: String = String::new();
+        io::stdin()
+            .read_line(&mut unit_selection)
+            .expect("Failed to read line");
+        let unit_selection: usize = match unit_selection.trim().parse() {
+            // TODO: only allow # from selection
+            Ok(num) if num <= (temp_units.len() - 1) => num,
+            Ok(_) => {
+                println!("Invalid Selection");
+                continue;
+            }
+            Err(_) => {
+                println!("Invalid Selection");
+                continue;
+            }
+        };
+        let unit_of_temperature: String =
+            get_scales(scales_of_temperature)[unit_selection].to_string();
+        break unit_of_temperature;
+    }
 }
 
 fn evaluate_expressions(formula: &str, variable: &f32) -> f32 {
-    // todo finish expression evaluator 
+    // todo finish expression evaluator
     let expression = formula.replace("x", &variable.to_string());
     let formula: Formula =
         parse_formula::parse_string_to_formula(&expression, None::<NoCustomFunction>);
     let result: Value = calculate::calculate_formula(formula, None::<NoReference>);
     let result_float = calculate::result_to_string(result).parse::<f32>();
-    if let Ok(float) = result_float{
+    if let Ok(float) = result_float {
         float
-    }else{
+    } else {
         println!("Something is wrong with this thing");
         println!("Result_Float:{:?}", result_float);
         panic!();
@@ -192,12 +196,11 @@ fn convert_temp(
         .get(&target_unit_of_temperature as &str)
         .unwrap()
         .to_owned();
-    let final_temp_amount: f32 =
-        evaluate_expressions(&target_unit_expression, initial_temp_amount);
+    let final_temp_amount: f32 = evaluate_expressions(&target_unit_expression, initial_temp_amount);
     final_temp_amount
 }
 
-fn display_tempurerature_conversion(temp_data: TemperatureInformation){
+fn display_temperature_conversion(temp_data: TemperatureInformation) {
     println!(
         "Converted Initial Temperature {0}°{1} to Final Temperature {2}°{3}",
         temp_data.initial_temp_amount,
@@ -207,11 +210,9 @@ fn display_tempurerature_conversion(temp_data: TemperatureInformation){
     );
 }
 fn main() {
-    let temp_data: TemperatureInformation =
-        TemperatureInformation::instatiate_temperature_information(
-            enter_temperature(),
-            display_temperature_units_list("Select Current Unit of Temperature"),
-            display_temperature_units_list("Select Target Unit of Temperature"),            
-        );
-    display_tempurerature_conversion(temp_data);
+    display_temperature_conversion(TemperatureInformation::instantiate_temperature_information(
+        enter_temperature(),
+        display_temperature_units_list("Select Current Unit of Temperature"),
+        display_temperature_units_list("Select Target Unit of Temperature"),
+    ));
 }
