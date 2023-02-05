@@ -78,46 +78,39 @@ fn get_scales(scales_map: fn() -> BTreeMap<String, [(String, String); 4]>) -> Ve
     scales
 }
 
-#[derive(Debug)]
 struct TemperatureInformation {
-    temp_amount: f32,
-    unit_of_temperature: String,
-    unit_of_temperature_abbreviation: String,
-    target_unit_of_temperature: Option<String>,
+    initial_temp_amount: f32,
+    _initial_unit_of_temperature: String,
+    initial_unit_of_temperature_abbreviation: String,
+    final_temperature_amount: f32,
+    _final_unit_of_temperature: String,
+    final_unit_of_temperature_abbreviation: String
+
 }
 
 impl TemperatureInformation {
     fn instatiate_temperature_information(
-        temp_amount: f32,
-        unit_of_temperature: String,
-        target_unit_of_temperature: String,
+        initial_temp_amount: f32,
+        initial_unit_of_temperature: String,
+        final_unit_of_temperature: String,
     ) -> Self {
         Self {
-            temp_amount,
-            unit_of_temperature: unit_of_temperature.to_string(),
-            unit_of_temperature_abbreviation: get_unit_abbreviation(
+            initial_temp_amount,
+            _initial_unit_of_temperature: initial_unit_of_temperature.to_string(),
+            initial_unit_of_temperature_abbreviation: get_unit_abbreviation(
                 String::from("abbreviation"),
                 get_unit_scale,
-                unit_of_temperature.to_string(),
+                initial_unit_of_temperature.to_string(),
                 scales_of_temperature,
             ),
-            target_unit_of_temperature: Some(target_unit_of_temperature.to_string()),
-        }
-    }
-    fn instatiate_final_temperature_information(
-        temp_amount: f32,
-        unit_of_temperature: String,
-    ) -> Self {
-        Self {
-            temp_amount,
-            unit_of_temperature: unit_of_temperature.to_string(),
-            unit_of_temperature_abbreviation: get_unit_abbreviation(
+            final_temperature_amount: convert_temp(&initial_temp_amount, &initial_unit_of_temperature, &final_unit_of_temperature, scales_of_temperature),
+            _final_unit_of_temperature: final_unit_of_temperature.to_string(),
+            final_unit_of_temperature_abbreviation: get_unit_abbreviation(
                 String::from("abbreviation"),
                 get_unit_scale,
-                unit_of_temperature.to_string(),
+                final_unit_of_temperature.to_string(),
                 scales_of_temperature,
-            ),
-            target_unit_of_temperature: None,
+            )
         }
     }
 }
@@ -171,7 +164,7 @@ fn display_temperature_units_list(user_prompt: &str) -> String {
 }
 }
 
-fn evaluate_expressions(formula: &str, variable: f32) -> f32 {
+fn evaluate_expressions(formula: &str, variable: &f32) -> f32 {
     // todo finish expression evaluator 
     let expression = formula.replace("x", &variable.to_string());
     let formula: Formula =
@@ -188,42 +181,37 @@ fn evaluate_expressions(formula: &str, variable: f32) -> f32 {
 }
 
 fn convert_temp(
-    temp_data: TemperatureInformation,
+    initial_temp_amount: &f32,
+    initial_unit_of_temperature: &String,
+    target_unit_of_temperature: &String,
     scales_map: fn() -> BTreeMap<String, [(String, String); 4]>,
-) -> TemperatureInformation {
+) -> f32 {
     let unit_scale: BTreeMap<String, String> =
-        get_unit_scale(temp_data.unit_of_temperature, scales_map);
+        get_unit_scale(initial_unit_of_temperature.to_string(), scales_map);
     let target_unit_expression: String = unit_scale
-        .get(temp_data.target_unit_of_temperature.as_ref().unwrap())
+        .get(&target_unit_of_temperature as &str)
         .unwrap()
         .to_owned();
     let final_temp_amount: f32 =
-        evaluate_expressions(&target_unit_expression, temp_data.temp_amount);
-    TemperatureInformation::instatiate_final_temperature_information(
-        final_temp_amount,
-        temp_data
-            .target_unit_of_temperature
-            .as_ref()
-            .unwrap()
-            .to_string(),
-    )
+        evaluate_expressions(&target_unit_expression, initial_temp_amount);
+    final_temp_amount
 }
 
 fn display_tempurerature_conversion(temp_data: TemperatureInformation){
     println!(
         "Converted Initial Temperature {0}°{1} to Final Temperature {2}°{3}",
-        temp_data.temp_amount,
-        temp_data.unit_of_temperature_abbreviation,
-        temp_data.temp_amount,
-        temp_data.unit_of_temperature_abbreviation
+        temp_data.initial_temp_amount,
+        temp_data.initial_unit_of_temperature_abbreviation,
+        temp_data.final_temperature_amount,
+        temp_data.final_unit_of_temperature_abbreviation
     );
 }
 fn main() {
-    let initial_temp_data: TemperatureInformation =
+    let temp_data: TemperatureInformation =
         TemperatureInformation::instatiate_temperature_information(
             enter_temperature(),
             display_temperature_units_list("Select Current Unit of Temperature"),
-            display_temperature_units_list("Select Target Unit of Temperature"),
+            display_temperature_units_list("Select Target Unit of Temperature"),            
         );
-    display_tempurerature_conversion(convert_temp(initial_temp_data, scales_of_temperature));
+    display_tempurerature_conversion(temp_data);
 }
