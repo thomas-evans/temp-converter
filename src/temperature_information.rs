@@ -19,25 +19,20 @@ impl TemperatureInformation {
         Self {
             initial_temp_amount,
             _initial_unit_of_temperature: initial_unit_of_temperature.to_string(),
-            initial_unit_of_temperature_abbreviation: scales_of_temperature::get_unit_abbreviation(
-                String::from("abbreviation"),
-                scales_of_temperature::get_unit_scale,
-                initial_unit_of_temperature.to_string(),
-                scales_of_temperature::scales_of_temperature,
-            ),
+            initial_unit_of_temperature_abbreviation: scales_of_temperature::get_scale(
+                &initial_unit_of_temperature,
+            )
+            .abbreviation,
             final_temperature_amount: convert_temperature::convert_temp(
                 &initial_temp_amount,
                 &initial_unit_of_temperature,
                 &final_unit_of_temperature,
-                scales_of_temperature::scales_of_temperature,
             ),
             _final_unit_of_temperature: final_unit_of_temperature.to_string(),
-            final_unit_of_temperature_abbreviation: scales_of_temperature::get_unit_abbreviation(
-                String::from("abbreviation"),
-                scales_of_temperature::get_unit_scale,
-                final_unit_of_temperature.to_string(),
-                scales_of_temperature::scales_of_temperature,
-            ),
+            final_unit_of_temperature_abbreviation: scales_of_temperature::get_scale(
+                &final_unit_of_temperature,
+            )
+            .abbreviation,
         }
     }
 }

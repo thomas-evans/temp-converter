@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 extern crate xlformula_engine;
 use crate::scales_of_temperature;
 use xlformula_engine::calculate;
@@ -8,7 +7,7 @@ use xlformula_engine::types::Value;
 use xlformula_engine::NoCustomFunction;
 use xlformula_engine::NoReference;
 
-fn evaluate_expressions(formula: &str, variable: &f32) -> f32 {
+fn evaluate_expressions(formula: String, variable: &f32) -> f32 {
     let expression = formula.replace("x", &variable.to_string());
     let formula: Formula =
         parse_formula::parse_string_to_formula(&expression, None::<NoCustomFunction>);
@@ -27,13 +26,10 @@ pub fn convert_temp(
     initial_temp_amount: &f32,
     initial_unit_of_temperature: &String,
     target_unit_of_temperature: &String,
-    scales_map: fn() -> BTreeMap<String, [(String, String); 4]>,
 ) -> f32 {
-    let unit_scale: BTreeMap<String, String> =
-        scales_of_temperature::get_unit_scale(initial_unit_of_temperature.to_string(), scales_map);
-    if let Some(scale) = unit_scale.get(&target_unit_of_temperature as &str) {
-        evaluate_expressions(&scale, initial_temp_amount)
-    } else {
-        panic!();
-    }
+    let formula = scales_of_temperature::get_expression(
+        &initial_unit_of_temperature.to_string(),
+        &target_unit_of_temperature.to_string(),
+    );
+    evaluate_expressions(formula, initial_temp_amount)
 }

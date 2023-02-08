@@ -4,7 +4,6 @@ pub mod convert_temperature;
 pub mod scales_of_temperature;
 pub mod temperature_information;
 pub mod user_interface;
-
 fn main() {
     user_interface::display_temperature_conversion(
         temperature_information::TemperatureInformation::new(

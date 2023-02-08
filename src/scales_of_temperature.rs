@@ -1,76 +1,106 @@
-// TODO convert scales_of_temperature into a struct or enum or both
+use std::fmt;
 
-use std::collections::BTreeMap;
-pub fn scales_of_temperature() -> BTreeMap<String, [(String, String); 4]> {
-    let mut scales: BTreeMap<String, [(String, String); 4]> = BTreeMap::new();
-    scales.insert(
-        String::from("Celsius"),
-        [
-            (String::from("Kelvin"), String::from("=(x+273.15)")),
-            (String::from("Fahrenheit"), String::from("=(x*9/5+32)")),
-            (String::from("Rankine"), String::from("=((x+273.15)*9/5)")),
-            (String::from("abbreviation"), String::from("C")),
-        ],
-    );
-    scales.insert(
-        String::from("Kelvin"),
-        [
-            (String::from("Celsius"), String::from("=(x-273.15)")),
-            (String::from("Fahrenheit"), String::from("=(x*9/5-459.67)")),
-            (String::from("Rankine"), String::from("=(x*9/5)")),
-            (String::from("abbreviation"), String::from("K")),
-        ],
-    );
-    scales.insert(
-        String::from("Fahrenheit"),
-        [
-            (String::from("Celsius"), String::from("=((x-32)*5/9)")),
-            (String::from("Kelvin"), String::from("=((x+459.67)*5/9)")),
-            (String::from("Rankine"), String::from("=(x+459.67)")),
-            (String::from("abbreviation"), String::from("F")),
-        ],
-    );
-    scales.insert(
-        String::from("Rankine"),
-        [
-            (String::from("Celsius"), String::from("=((x-491.67)*5/9)")),
-            (String::from("Kelvin"), String::from("=(x*5/9)")),
-            (String::from("Fahrenheit"), String::from("=(x-459.67)")),
-            (String::from("abbreviation"), String::from("R")),
-        ],
-    );
-
-    scales
+#[derive(PartialEq, Debug)]
+pub enum ScaleEntry {
+    TargetScaleName(String),
+    Expression(String),
 }
 
-pub fn get_unit_scale(
-    unit_name: String,
-    scales_map: fn() -> BTreeMap<String, [(String, String); 4]>,
-) -> BTreeMap<String, String> {
-    if let Some(scale) = scales_map().get(&unit_name) {
-        BTreeMap::from(scale.to_owned())
+impl fmt::Display for ScaleEntry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ScaleEntry::TargetScaleName(x) => write!(f, "{x}"),
+            ScaleEntry::Expression(x) => write!(f, "{x}"),
+        }
+    }
+}
+#[derive(Debug)]
+pub struct Scale {
+    pub scale_name: String,
+    pub scale_entries: Vec<(ScaleEntry, ScaleEntry)>,
+    pub abbreviation: String,
+}
+
+impl Scale {
+    pub fn new(scale_name: &str, scale_entry: [(&str, &str); 3], abbreviation: &str) -> Self {
+        Self {
+            scale_name: scale_name.to_string(),
+            scale_entries: scale_entry[..]
+                .into_iter()
+                .map(|x| {
+                    (
+                        ScaleEntry::TargetScaleName(x.0.to_string()),
+                        ScaleEntry::Expression(x.1.to_string()),
+                    )
+                })
+                .collect(),
+            abbreviation: abbreviation.to_string(),
+        }
+    }
+}
+
+pub fn compose_scales() -> Vec<Scale> {
+    let mut scales_of_temperature: Vec<Scale> = Vec::new();
+    scales_of_temperature.push(Scale::new(
+        "Celsius",
+        [
+            ("Kelvin", "=(x+273.15)"),
+            ("Fahrenheit", "=(x*9/5+32)"),
+            ("Rankine", "=((x+273.15)*9/5)"),
+        ],
+        "C",
+    ));
+    scales_of_temperature.push(Scale::new(
+        "Kelvin",
+        [
+            ("Celsius", "=(x-273.15)"),
+            ("Fahrenheit", "=(x*9/5-459.67)"),
+            ("Rankine", "=(x*9/5)"),
+        ],
+        "K",
+    ));
+    scales_of_temperature.push(Scale::new(
+        "Fahrenheit",
+        [
+            ("Celsius", "=((x-32)*5/9)"),
+            ("Kelvin", "=((x+459.67)*5/9)"),
+            ("Rankine", "=(x+459.67)"),
+        ],
+        "F",
+    ));
+    scales_of_temperature.push(Scale::new(
+        "Rankine",
+        [
+            ("Celsius", "=((x-491.67)*5/9)"),
+            ("Kelvin", "=(x*5/9)"),
+            ("Fahrenheit", "=(x-459.67)"),
+        ],
+        "R",
+    ));
+    scales_of_temperature
+}
+
+pub fn get_scale(scale_name: &String) -> Scale {
+    if let Some(scale) = compose_scales()
+        .into_iter()
+        .find(|x| x.scale_name == scale_name.as_ref())
+    {
+        scale
     } else {
         panic!();
     }
 }
 
-pub fn get_unit_abbreviation(
-    unit_name: String,
-    unit_scale_map: fn(
-        String,
-        fn() -> BTreeMap<String, [(String, String); 4]>,
-    ) -> BTreeMap<String, String>,
-    unit_scale_map_unit_name: String,
-    scales_map: fn() -> BTreeMap<String, [(String, String); 4]>,
+pub fn get_expression(
+    initial_unit_of_temperature: &String,
+    target_unit_of_temperature: &String,
 ) -> String {
-    if let Some(abbr) = unit_scale_map(unit_scale_map_unit_name, scales_map).get(&unit_name) {
-        abbr.to_string()
-    } else {
-        panic!();
+    match get_scale(initial_unit_of_temperature)
+        .scale_entries
+        .into_iter()
+        .find(|x| x.0 == ScaleEntry::TargetScaleName(target_unit_of_temperature.to_string()))
+    {
+        Some((_x, y)) => y.to_string(),
+        None => panic!("could not get expression"),
     }
-}
-
-pub fn get_scales(scales_map: fn() -> BTreeMap<String, [(String, String); 4]>) -> Vec<String> {
-    let scales: Vec<String> = scales_map().into_keys().collect();
-    scales
 }

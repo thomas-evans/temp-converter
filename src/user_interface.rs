@@ -25,10 +25,9 @@ pub fn enter_temperature() -> f32 {
 pub fn display_temperature_units_list(user_prompt: &str) -> String {
     loop {
         println!("{user_prompt}");
-        let temp_units: Vec<String> =
-            scales_of_temperature::get_scales(scales_of_temperature::scales_of_temperature);
-        for (i, el) in temp_units.iter().enumerate() {
-            println!("{i}: {el}");
+        let scales: Vec<scales_of_temperature::Scale> = scales_of_temperature::compose_scales();
+        for (i, el) in scales.iter().enumerate() {
+            println!("{i}: {0}", el.scale_name);
         }
         let mut unit_selection: String = String::new();
         io::stdin()
@@ -36,7 +35,8 @@ pub fn display_temperature_units_list(user_prompt: &str) -> String {
             .expect("Failed to read line");
         let unit_selection: usize = match unit_selection.trim().parse() {
             // TODO only allow # from selection
-            Ok(num) if num <= (temp_units.len() - 1) => num,
+            // TODO do not allow the same selection
+            Ok(num) if num <= (scales.len() - 1) => num,
             Ok(_) => {
                 println!("Invalid Selection");
                 continue;
@@ -46,10 +46,10 @@ pub fn display_temperature_units_list(user_prompt: &str) -> String {
                 continue;
             }
         };
-        let unit_of_temperature: String =
-            scales_of_temperature::get_scales(scales_of_temperature::scales_of_temperature)
-                [unit_selection]
-                .to_string();
+        let unit_of_temperature: String = scales[unit_selection].scale_name.to_string();
+        // scales_of_temperature::get_scale(scales_of_temperature::scales_of_temperature)
+        //     [unit_selection]
+        //     .to_string();
         break unit_of_temperature;
     }
 }
