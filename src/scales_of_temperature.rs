@@ -38,7 +38,8 @@ impl Scale {
         }
     }
 }
-
+//TODO change this into a file i.o
+// TODO multilingual?
 pub fn compose_scales() -> Vec<Scale> {
     let mut scales_of_temperature: Vec<Scale> = Vec::new();
     scales_of_temperature.push(Scale::new(
@@ -87,7 +88,7 @@ pub fn get_scale(scale_name: &String) -> Scale {
     {
         scale
     } else {
-        panic!();
+        panic!("scale does not exist");
     }
 }
 

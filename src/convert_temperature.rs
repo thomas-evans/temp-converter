@@ -6,7 +6,7 @@ use xlformula_engine::types::Formula;
 use xlformula_engine::types::Value;
 use xlformula_engine::NoCustomFunction;
 use xlformula_engine::NoReference;
-
+// TODO rewrite without import using .chars().enumerate()
 fn evaluate_expressions(formula: String, variable: &f32) -> f32 {
     let expression = formula.replace("x", &variable.to_string());
     let formula: Formula =
@@ -16,9 +16,7 @@ fn evaluate_expressions(formula: String, variable: &f32) -> f32 {
     if let Ok(float) = result_float {
         float
     } else {
-        println!("Something is wrong with this thing");
-        println!("Result_Float:{:?}", result_float);
-        panic!();
+        panic!("the expression being evaluated had a problem");
     }
 }
 

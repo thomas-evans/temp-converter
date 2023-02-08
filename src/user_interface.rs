@@ -21,7 +21,7 @@ pub fn enter_temperature() -> f32 {
         break temperature;
     }
 }
-
+// TODO split into two functions (chaining?)
 pub fn display_temperature_units_list(user_prompt: &str) -> String {
     loop {
         println!("{user_prompt}");
@@ -47,9 +47,6 @@ pub fn display_temperature_units_list(user_prompt: &str) -> String {
             }
         };
         let unit_of_temperature: String = scales[unit_selection].scale_name.to_string();
-        // scales_of_temperature::get_scale(scales_of_temperature::scales_of_temperature)
-        //     [unit_selection]
-        //     .to_string();
         break unit_of_temperature;
     }
 }
@@ -57,9 +54,9 @@ pub fn display_temperature_units_list(user_prompt: &str) -> String {
 pub fn display_temperature_conversion(temp_data: temperature_information::TemperatureInformation) {
     println!(
         "Converted Initial Temperature {0}°{1} to Final Temperature {2}°{3}",
-        temp_data.initial_temp_amount,
+        temp_data.initial_degrees,
         temp_data.initial_unit_of_temperature_abbreviation,
-        temp_data.final_temperature_amount,
+        temp_data.final_degrees,
         temp_data.final_unit_of_temperature_abbreviation
     );
 }
