@@ -2,9 +2,11 @@ use crate::scales_of_temperature;
 use crate::temperature_information;
 use std::io;
 
+// TODO improve UI so that the user doesn't need to hit the return button
+
 pub fn enter_temperature() -> f32 {
     loop {
-        println!("Enter Temperature");
+        println!("Enter Degrees");
         let mut temperature: String = String::new();
 
         io::stdin()
@@ -14,7 +16,7 @@ pub fn enter_temperature() -> f32 {
         let temperature: f32 = match temperature.trim().parse::<f32>() {
             Ok(num) => num,
             Err(_) => {
-                println!("Invalid Number");
+                println!("Invalid Number, try something like 32");
                 continue;
             }
         };

@@ -82,15 +82,13 @@ pub fn compose_scales() -> Vec<Scale> {
 }
 
 pub fn get_scale(scale_name: &String) -> Scale {
-    if let Some(scale) = compose_scales()
+    compose_scales()
         .into_iter()
         .find(|x| x.scale_name == scale_name.as_ref())
-    {
-        scale
-    } else {
-        panic!("scale does not exist");
-    }
+        .expect("scale does not exist")
 }
+
+// TODO create a getScales function to make the compose_scales function, ScaleEntry enum, and Scale struct private 
 
 pub fn get_expression(
     initial_unit_of_temperature: &String,

@@ -12,12 +12,9 @@ fn evaluate_expressions(formula: String, variable: &f32) -> f32 {
     let formula: Formula =
         parse_formula::parse_string_to_formula(&expression, None::<NoCustomFunction>);
     let result: Value = calculate::calculate_formula(formula, None::<NoReference>);
-    let result_float = calculate::result_to_string(result).parse::<f32>();
-    if let Ok(float) = result_float {
-        float
-    } else {
-        panic!("the expression being evaluated had a problem");
-    }
+    calculate::result_to_string(result)
+        .parse::<f32>()
+        .expect("expression result could not be parsed into f32")
 }
 
 pub fn convert_temp(
