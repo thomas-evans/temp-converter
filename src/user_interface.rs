@@ -2,8 +2,6 @@ use crate::scales_of_temperature;
 use crate::temperature_information;
 use std::io;
 
-// TODO improve UI so that the user doesn't need to hit the return button
-
 pub fn enter_temperature() -> f32 {
     loop {
         println!("Input Degrees and Press Enter");
@@ -17,11 +15,16 @@ pub fn enter_temperature() -> f32 {
         println!("Invalid Number, try something like 32");
     }
 }
-// TODO split into two functions (chaining?)
-pub fn display_temperature_units_list(user_prompt: &str) -> String {
+pub fn display_temperature_units_list(
+    user_prompt: &str,
+    initial_temp_type: Option<&String>,
+) -> String {
     loop {
         println!("{user_prompt}");
-        let scales: Vec<String> = scales_of_temperature::get_scales();
+        let scales = initial_temp_type.map_or_else(
+            || scales_of_temperature::get_scales(),
+            |s| scales_of_temperature::get_target_scale_names(s),
+        );
         for (i, el) in scales.iter().enumerate() {
             println!("{i}: {el}");
         }
@@ -30,8 +33,6 @@ pub fn display_temperature_units_list(user_prompt: &str) -> String {
             .read_line(&mut unit_selection)
             .expect("Failed to read line");
         let unit_selection: usize = match unit_selection.trim().parse() {
-            // TODO only allow # from selection
-            // TODO do not allow the same selection
             Ok(num) if num <= (scales.len() - 1) => num,
             Ok(_) | Err(_) => {
                 println!("Invalid Selection");

@@ -38,7 +38,6 @@ impl Scale {
     }
 }
 //TODO change this into a file i.o
-// TODO multilingual?
 fn compose_scales() -> Vec<Scale> {
     let scales_of_temperature: Vec<Scale> = vec![
         Scale::new(
@@ -94,6 +93,14 @@ pub fn get_scales() -> Vec<String> {
         all_scales.push(scale.scale_name.to_string());
     }
     all_scales
+}
+
+pub fn get_target_scale_names(scale_name: &str) -> Vec<String> {
+    let mut target_scales: Vec<String> = vec![];
+    for scale_entry in get_scale(scale_name).scale_entries {
+        target_scales.push(scale_entry.0.to_string());
+    }
+    target_scales
 }
 
 pub fn get_expression(

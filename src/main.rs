@@ -14,11 +14,18 @@ mod tokenizer;
 mod user_interface;
 
 fn main() {
+    let degrees = user_interface::enter_temperature();
+    let initial_unit_temperature =
+        &user_interface::display_temperature_units_list("Select Current Unit of Temperature", None);
+    let target_unit_temperature = &user_interface::display_temperature_units_list(
+        "Select Target Unit of Temperature",
+        Some(initial_unit_temperature),
+    );
     user_interface::display_temperature_conversion(
         &temperature_information::TemperatureInformation::new(
-            user_interface::enter_temperature(),
-            &user_interface::display_temperature_units_list("Select Current Unit of Temperature"),
-            &user_interface::display_temperature_units_list("Select Target Unit of Temperature"),
+            degrees,
+            initial_unit_temperature,
+            target_unit_temperature,
         ),
     );
 }
