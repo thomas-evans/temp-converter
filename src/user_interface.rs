@@ -15,7 +15,6 @@ pub fn enter_temperature() -> f32 {
         println!("Invalid Number, try something like 32");
     }
 }
-// TODO split into two functions (chaining?)
 pub fn display_temperature_units_list(
     user_prompt: &str,
     initial_temp_type: Option<&str>,
@@ -32,8 +31,6 @@ pub fn display_temperature_units_list(
             .read_line(&mut unit_selection)
             .expect("Failed to read line");
         let unit_selection: usize = match unit_selection.trim().parse() {
-            // TODO only allow # from selection
-            // TODO do not allow the same selection
             Ok(num) if num <= (scales.len() - 1) => num,
             Ok(_) | Err(_) => {
                 println!("Invalid Selection");
