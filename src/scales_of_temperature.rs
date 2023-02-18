@@ -87,20 +87,18 @@ pub fn get_scale(scale_name: &str) -> Scale {
         .expect("scale does not exist")
 }
 
-pub fn get_scales() -> Vec<String> {
-    let mut all_scales: Vec<String> = vec![];
-    for scale in &compose_scales() {
-        all_scales.push(scale.scale_name.to_string());
+pub fn get_scales(scale: Option<&str>) -> Vec<String> {
+    let mut scales: Vec<String> = vec![];
+    if let Some(s) = scale {
+        for scale in get_scale(s).scale_entries {
+            scales.push(scale.0.to_string());
+        }
+    } else {
+        for scale in &compose_scales() {
+            scales.push(scale.scale_name.to_string());
+        }
     }
-    all_scales
-}
-
-pub fn get_target_scale_names(scale_name: &str) -> Vec<String> {
-    let mut target_scales: Vec<String> = vec![];
-    for scale_entry in get_scale(scale_name).scale_entries {
-        target_scales.push(scale_entry.0.to_string());
-    }
-    target_scales
+    scales
 }
 
 pub fn get_expression(
