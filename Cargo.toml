@@ -1,7 +1,10 @@
 [package]
 name = "temp-converter"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-
+license = "MIT"
+repository = "https://github.com/thomas-evans/temp-converter"
+keywords = ["temperature", "converter", "fahrenheit", "celsius", "rankine", "kelvin"]
+description = "An exploration of the rust language through converting temperatures. Will eventually have a lib file and crate"
+categories = ["temperature-converter"]
 [dependencies]
-xlformula_engine = "0.1.17"

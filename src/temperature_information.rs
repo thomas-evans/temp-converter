@@ -13,24 +13,24 @@ pub struct TemperatureInformation {
 impl TemperatureInformation {
     pub fn new(
         initial_degrees: f32,
-        initial_unit_of_temperature: String,
-        final_unit_of_temperature: String,
+        initial_unit_of_temperature: &str,
+        final_unit_of_temperature: &str,
     ) -> Self {
         Self {
             initial_degrees,
             _initial_unit_of_temperature: initial_unit_of_temperature.to_string(),
             initial_unit_of_temperature_abbreviation: scales_of_temperature::get_scale(
-                &initial_unit_of_temperature,
+                initial_unit_of_temperature,
             )
             .abbreviation,
             final_degrees: convert_temperature::convert_temp(
-                &initial_degrees,
-                &initial_unit_of_temperature,
-                &final_unit_of_temperature,
+                initial_degrees,
+                initial_unit_of_temperature,
+                final_unit_of_temperature,
             ),
             _final_unit_of_temperature: final_unit_of_temperature.to_string(),
             final_unit_of_temperature_abbreviation: scales_of_temperature::get_scale(
-                &final_unit_of_temperature,
+                final_unit_of_temperature,
             )
             .abbreviation,
         }
