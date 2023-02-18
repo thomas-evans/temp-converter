@@ -11,10 +11,10 @@ pub fn enter_temperature() -> f32 {
         io::stdin()
             .read_line(&mut temperature)
             .expect("Failed to read line");
-        if let Ok(n) = temperature.trim().parse::<f32>(){
-            break n
+        if let Ok(n) = temperature.trim().parse::<f32>() {
+            break n;
         }
-        println!("Invalid Number, try something like 32");        
+        println!("Invalid Number, try something like 32");
     }
 }
 // TODO split into two functions (chaining?)

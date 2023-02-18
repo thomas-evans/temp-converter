@@ -88,9 +88,9 @@ pub fn get_scale(scale_name: &str) -> Scale {
         .expect("scale does not exist")
 }
 
-pub fn get_scales() -> Vec<String>{
+pub fn get_scales() -> Vec<String> {
     let mut all_scales: Vec<String> = vec![];
-    for scale in &compose_scales(){
+    for scale in &compose_scales() {
         all_scales.push(scale.scale_name.to_string());
     }
     all_scales
