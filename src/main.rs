@@ -3,7 +3,7 @@
 #![warn(clippy::nursery)]
 #![warn(clippy::cargo)]
 // TODO write tests
-// TODO keep an eye on benchmarking tests
+// TODO keep an eye on benchmarking tests and see if you can create them
 // TODO refactor into library
 mod calculator;
 mod convert_temperature;

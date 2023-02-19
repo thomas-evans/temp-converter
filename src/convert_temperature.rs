@@ -16,14 +16,19 @@ pub fn convert_temp(
 #[cfg(test)]
 mod convert_temp {
     use super::convert_temp;
+    // TODO write test to see how accurate conversion is on either side of the decimal
     #[test]
     fn correct_conversion_result() {
-        let error_margin = f32::EPSILON;
-        let convert_temp_result =
-            convert_temp(32.0, &String::from("Fahrenheit"), &String::from("Celsius"));
         assert!(
-            (convert_temp_result - 0.0).abs() < error_margin,
-            "32F to C should be zero - convert_temp"
+            (convert_temp(32.0, &String::from("Fahrenheit"), &String::from("Celsius")) - 0.0).abs()
+                < f32::EPSILON,
+            "32F should be 0C"
+        );
+        assert!(
+            (convert_temp(212.0, &String::from("Fahrenheit"), &String::from("Celsius")) - 100.0)
+                .abs()
+                < f32::EPSILON,
+            "212F should be 100C"
         );
     }
 }

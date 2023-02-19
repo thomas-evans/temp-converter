@@ -8,6 +8,7 @@ pub fn evaluate_expression(formula: &str, variable: f32) -> f32 {
         formula.to_string()
     };
     let tokenized_expression: Vec<tokenizer::Token> = tokenizer::tokenizer(&expression);
+    println!("{tokenized_expression:?}");
     let rpn_ordered_expression: Vec<tokenizer::Token> =
         shunting_yard_algorithm::convert_into_rpn(tokenized_expression);
     let mut stack = vec![];

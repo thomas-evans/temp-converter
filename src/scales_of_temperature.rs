@@ -18,6 +18,11 @@ pub struct Scale {
     pub scale_name: String,
     scale_entries: Vec<(ScaleEntry, ScaleEntry)>,
     pub abbreviation: String,
+    // TODO add description
+    // TODO add boiling point of water
+    // TODO add freezing point of water
+    // TODO add absolute zero
+    // TODO add other interesting information
 }
 
 impl Scale {
@@ -37,6 +42,7 @@ impl Scale {
         }
     }
 }
+// TODO create process to scrape info from wiki and generate file
 //TODO change this into a file i.o
 fn compose_scales() -> Vec<Scale> {
     let scales_of_temperature: Vec<Scale> = vec![
