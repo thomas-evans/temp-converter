@@ -149,6 +149,7 @@ pub fn tokenizer(expression: &str) -> Vec<Token> {
             } else {
                 push_token(&mut tokens_vector, Some(character.1), None);
             }
+            // TODO check your understanding of how this works, may need to remove
         } else if character.1.is_numeric() {
             push_token(
                 &mut tokens_vector,
