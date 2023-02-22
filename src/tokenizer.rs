@@ -175,7 +175,8 @@ mod token_type {
     #[test]
 
     fn as_f32_given_number_variant_return_f32() {
-        let token = TokenType::Number(548.125);
+        let token = TokenType::
+        Number(58.125);
         assert!(
             (token.as_f32().unwrap() - 548.125).abs() < f32::EPSILON,
             "it should return an f32 from a number variant"
