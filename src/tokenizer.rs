@@ -149,7 +149,7 @@ pub fn tokenizer(expression: &str) -> Vec<Token> {
             } else {
                 push_token(&mut tokens_vector, Some(character.1), None);
             }
-            // TODO check your understanding of how this works, may need to remove
+            // TODO check your understanding of how this works, may need to remove!
         } else if character.1.is_numeric() {
             push_token(
                 &mut tokens_vector,
@@ -175,8 +175,7 @@ mod token_type {
     #[test]
 
     fn as_f32_given_number_variant_return_f32() {
-        let token = TokenType::
-        Number(58.125);
+        let token = TokenType::Number(548.125);
         assert!(
             (token.as_f32().unwrap() - 548.125).abs() < f32::EPSILON,
             "it should return an f32 from a number variant"
