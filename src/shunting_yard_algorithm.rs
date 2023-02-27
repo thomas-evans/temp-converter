@@ -172,17 +172,98 @@ mod operator_instructions {
     }
 }
 
-// #[cfg(test)]
-// mod right_paren_instructions{
-//     use super::right_paren_instructions;
+#[cfg(test)]
+mod right_paren_instructions {
+    use super::right_paren_instructions;
+    use crate::tokenizer::Token;
 
-//     #[test]
-//     fn it_should_discard_left_paren_when_on_top_of_operator_stack(){
+    #[test]
+    fn it_should_discard_left_paren_when_on_top_of_operator_stack() {
+        let mut operator_stack: Vec<Token> = vec![];
+        operator_stack.push(Token::new(crate::tokenizer::TokenType::LeftParenthesis));
+        let mut output: Vec<Token> = vec![];
+        assert_eq!(
+            operator_stack[0],
+            Token::new(crate::tokenizer::TokenType::LeftParenthesis)
+        );
+        right_paren_instructions(&mut operator_stack, &mut output);
+        assert_eq!(operator_stack.len(), 0);
+    }
 
-//     }
+    #[test]
+    fn it_should_push_all_other_operators_to_output_and_then_discard_itself_and_left_paren() {
+        let mut operator_stack: Vec<Token> = vec![];
+        operator_stack.push(Token::new(crate::tokenizer::TokenType::LeftParenthesis));
+        operator_stack.push(Token::new(crate::tokenizer::TokenType::Addition));
+        operator_stack.push(Token::new(crate::tokenizer::TokenType::Division));
+        let mut output: Vec<Token> = vec![];
+        assert_eq!(
+            operator_stack[0],
+            Token::new(crate::tokenizer::TokenType::LeftParenthesis)
+        );
+        assert_eq!(
+            operator_stack[1],
+            Token::new(crate::tokenizer::TokenType::Addition)
+        );
+        assert_eq!(
+            operator_stack[2],
+            Token::new(crate::tokenizer::TokenType::Division)
+        );
+        right_paren_instructions(&mut operator_stack, &mut output);
+        assert_eq!(operator_stack.len(), 0);
+    }
+}
+#[cfg(test)]
+mod convert_into_rpn {
+    use super::convert_into_rpn;
+    use crate::tokenizer::Token;
 
-//     #[test]
-//     fn it_should_push_all_other_operators_to_output_and_then_discard_itself_and_left_paren(){
-
-//     }
-// }
+    #[test]
+    fn it_should_take_a_vector_of_tokens_and_return_vector_sorted_into_rpn() {
+        let tokens: Vec<Token> = vec![
+            Token::new(crate::tokenizer::TokenType::LeftParenthesis),
+            Token::new(crate::tokenizer::TokenType::Number(37.0)),
+            Token::new(crate::tokenizer::TokenType::Addition),
+            Token::new(crate::tokenizer::TokenType::Number(55.0)),
+            Token::new(crate::tokenizer::TokenType::RightParenthesis),
+            Token::new(crate::tokenizer::TokenType::Subtraction),
+            Token::new(crate::tokenizer::TokenType::Number(5.3)),
+            Token::new(crate::tokenizer::TokenType::Division),
+            Token::new(crate::tokenizer::TokenType::Number(9.4)),
+        ];
+        let result: Vec<Token> = convert_into_rpn(tokens);
+        assert_eq!(
+            result,
+            vec![
+                Token {
+                    token_type: crate::tokenizer::TokenType::Number(37.0),
+                    token_precedence: 0
+                },
+                Token {
+                    token_type: crate::tokenizer::TokenType::Number(55.0),
+                    token_precedence: 0
+                },
+                Token {
+                    token_type: crate::tokenizer::TokenType::Addition,
+                    token_precedence: 1
+                },
+                Token {
+                    token_type: crate::tokenizer::TokenType::Number(5.3),
+                    token_precedence: 0
+                },
+                Token {
+                    token_type: crate::tokenizer::TokenType::Number(9.4),
+                    token_precedence: 0
+                },
+                Token {
+                    token_type: crate::tokenizer::TokenType::Division,
+                    token_precedence: 2
+                },
+                Token {
+                    token_type: crate::tokenizer::TokenType::Subtraction,
+                    token_precedence: 1
+                }
+            ]
+        );
+    }
+}
