@@ -78,7 +78,7 @@ fn build_multidigit(
     if iterate_stream {
         char_stream.next();
     }
-    while let Some(x) = char_stream.next_if(|&x| x.1.is_numeric()) {
+    while let Some(x) = char_stream.next_if(|&x| x.1.is_numeric() || x.1 == &'.') {
         concatenated_numeric.push(x.1.to_owned());
     }
     concatenated_numeric
@@ -99,7 +99,6 @@ fn push_token(v: &mut Vec<Token>, c: Option<&char>, s: Option<String>) {
 }
 
 pub fn tokenizer(expression: &str) -> Vec<Token> {
-    println!("{expression:?}");
     let mut tokens_vector: Vec<Token> = vec![];
     let mut characters_vector: Vec<char> = vec![];
     for character in expression.chars() {
@@ -362,6 +361,16 @@ mod build_multidigit {
             "-51321",
             "it should return a string from a character stream with the first character removed"
         );
+    }
+
+    #[test]
+    fn it_should_create_multidigit_strings_from_floats() {
+        let mut characters_vector: Vec<char> = vec![];
+        for character in String::from("64.325").chars() {
+            characters_vector.push(character);
+        }
+        let mut char_stream = characters_vector.iter().enumerate().peekable();
+        assert_eq!(build_multidigit('6', &mut char_stream, true), "64.325");
     }
 }
 
