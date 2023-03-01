@@ -18,7 +18,7 @@ mod convert_temp {
     use super::convert_temp;
     // TODO write test to see how accurate conversion is on either side of the decimal
     #[test]
-    #[ignore = "reason"]
+    #[ignore = "pollutes test coverage"]
     fn correct_conversion_result() {
         assert!(
             (convert_temp(32.0, &String::from("Fahrenheit"), &String::from("Celsius")) - 0.0).abs()

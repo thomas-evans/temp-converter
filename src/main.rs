@@ -2,7 +2,12 @@
 #![warn(clippy::pedantic)]
 #![warn(clippy::nursery)]
 #![warn(clippy::cargo)]
+// TODO Consider rewriting with traits and structs so that functionality can be easily mocked
+// TODO Create Macro for test writing
 // TODO write tests
+// TODO make mocks available for testing
+// TODO rewrite tests to mock imports other than what is being tested
+// TODO refactor panics into errors
 // TODO keep an eye on benchmarking tests and see if you can create them
 // TODO refactor into library
 mod calculator;
