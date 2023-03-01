@@ -123,12 +123,11 @@ pub fn get_expression(
     }
 }
 
-
 #[cfg(test)]
-mod scale_entry_display{
+mod scale_entry_display {
     use super::ScaleEntry;
     #[test]
-    fn it_should_have_the_ability_to_be_cast_into_string(){
+    fn it_should_have_the_ability_to_be_cast_into_string() {
         let entry_target_scale_name = ScaleEntry::TargetScaleName(String::from("Celsius"));
         let entry_expression = ScaleEntry::Expression(String::from("x+23"));
         assert!(entry_target_scale_name.to_string() == "Celsius");
@@ -137,11 +136,11 @@ mod scale_entry_display{
 }
 
 #[cfg(test)]
-mod scale_new{
+mod scale_new {
     use super::Scale;
     use super::ScaleEntry;
     #[test]
-    fn it_should_generate_a_scale_struct(){
+    fn it_should_generate_a_scale_struct() {
         let scale = Scale::new(
             "Celsius",
             [
@@ -154,53 +153,57 @@ mod scale_new{
         assert!(scale.scale_name == "Celsius");
         assert!(scale.scale_entries[0].0 == ScaleEntry::TargetScaleName(String::from("Kelvin")));
         assert!(scale.scale_entries[0].1 == ScaleEntry::Expression(String::from("=(x+273.15)")));
-        assert!(scale.scale_entries[1].0 == ScaleEntry::TargetScaleName(String::from("Fahrenheit")));
+        assert!(
+            scale.scale_entries[1].0 == ScaleEntry::TargetScaleName(String::from("Fahrenheit"))
+        );
         assert!(scale.scale_entries[1].1 == ScaleEntry::Expression(String::from("=(x*9/5+32)")));
         assert!(scale.scale_entries[2].0 == ScaleEntry::TargetScaleName(String::from("Rankine")));
-        assert!(scale.scale_entries[2].1 == ScaleEntry::Expression(String::from("=((x+273.15)*9/5)")));
+        assert!(
+            scale.scale_entries[2].1 == ScaleEntry::Expression(String::from("=((x+273.15)*9/5)"))
+        );
         assert!(scale.abbreviation == "C");
     }
 }
 
-#[cfg(test)]
-mod compose_scales{
-    use super::compose_scales;
-    #[test]
-    fn it_should_return_a_vector_of_scales(){
-        let scale_vector = compose_scales();
+// #[cfg(test)]
+// mod compose_scales{
+//     // use super::compose_scales;
+//     #[test]
+//     fn it_should_return_a_vector_of_scales(){
+//         // let scale_vector = compose_scales();
 
-    }
-}
+//     }
+// }
 
-#[cfg(test)]
-mod get_scale{
-    // it should return a scale from it's name
-    #[test]
-    fn it_should_return_a_scale_given_a_scale_name(){}
-    // it should panic when a non-existent scale name is requested
-    #[test]
-    fn it_should_panic_when_scale_does_not_exist(){}
-}
+// #[cfg(test)]
+// mod get_scale{
+//     // it should return a scale from it's name
+//     #[test]
+//     fn it_should_return_a_scale_given_a_scale_name(){}
+//     // it should panic when a non-existent scale name is requested
+//     #[test]
+//     fn it_should_panic_when_scale_does_not_exist(){}
+// }
 
-#[cfg(test)]
-mod get_scales{
-    // it should return a vector of strings (scale names) when give a scale name
-    #[test]
-    fn it_should_return_a_specific_list_of_scales_given_a_scale_name(){}
-    // it should return all possible scales when given no scale name
-    #[test]
-    fn it_should_return_all_possible_scales_given_no_scale_name(){}
-}
+// #[cfg(test)]
+// mod get_scales{
+//     // it should return a vector of strings (scale names) when give a scale name
+//     #[test]
+//     fn it_should_return_a_specific_list_of_scales_given_a_scale_name(){}
+//     // it should return all possible scales when given no scale name
+//     #[test]
+//     fn it_should_return_all_possible_scales_given_no_scale_name(){}
+// }
 
-#[cfg(test)]
-mod get_expression{
-    // it should return a string (expression) when given a matching initial scale name and target scale name
-    #[test]
-    fn it_should_return_an_expression_given_an_initial_and_target_scale_name(){}
-    // it should panic when given a non matching initial scale name
-    #[test]
-    fn it_should_panic_given_a_non_matching_initial_scale_name(){}
-    // it should panic when given a non matching target scale name
-    #[test]
-    fn it_should_panic_given_a_non_matching_target_scale_name(){}
-}
+// #[cfg(test)]
+// mod get_expression{
+//     // it should return a string (expression) when given a matching initial scale name and target scale name
+//     #[test]
+//     fn it_should_return_an_expression_given_an_initial_and_target_scale_name(){}
+//     // it should panic when given a non matching initial scale name
+//     #[test]
+//     fn it_should_panic_given_a_non_matching_initial_scale_name(){}
+//     // it should panic when given a non matching target scale name
+//     #[test]
+//     fn it_should_panic_given_a_non_matching_target_scale_name(){}
+// }
